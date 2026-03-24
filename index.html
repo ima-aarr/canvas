@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Web Builder</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <aside id="sidebar">
+        <h2>Pro Builder</h2>
+        
+        <div class="panel-section">
+            <h3>要素追加</h3>
+            <button id="btn-add-text" class="ui-btn">📝 テキストを追加</button>
+            <button id="btn-add-box" class="ui-btn">🟥 四角形を追加</button>
+            <label class="ui-btn file-upload-btn">
+                🖼 画像を挿入
+                <input type="file" id="input-add-image" accept="image/png, image/jpeg, image/gif, image/webp">
+            </label>
+        </div>
+
+        <div class="panel-section">
+            <h3>カラー＆グラデーション</h3>
+            <label>基本カラー (文字/背景)</label>
+            <input type="color" id="input-color" value="#000000">
+            
+            <label>グラデーション (背景用)</label>
+            <div class="gradient-controls">
+                <input type="color" id="input-grad-color1" value="#ff7e5f">
+                <input type="color" id="input-grad-color2" value="#feb47b">
+            </div>
+            <label>角度 (度)</label>
+            <input type="number" id="input-grad-angle" value="45" min="0" max="360">
+            <button id="btn-apply-gradient" class="ui-btn ui-btn-small">グラデーション適用</button>
+        </div>
+
+        <div class="panel-section">
+            <h3>アニメーション (2D/3D)</h3>
+            <button id="btn-anim-bounce" class="ui-btn ui-btn-small">バウンド (2D)</button>
+            <button id="btn-anim-pulse" class="ui-btn ui-btn-small">パルス (2D)</button>
+            <button id="btn-anim-3d-spin" class="ui-btn ui-btn-small action-3d">3D 回転</button>
+            <button id="btn-anim-3d-flip" class="ui-btn ui-btn-small action-3d">3D フリップ</button>
+            <button id="btn-anim-clear" class="ui-btn ui-btn-small danger">アニメーション解除</button>
+        </div>
+
+        <button id="btn-export" class="ui-btn export-btn">📥 HTMLをエクスポート</button>
+    </aside>
+
+    <main id="workspace">
+        <div id="canvas-wrapper">
+            <div id="canvas">
+                </div>
+        </div>
+    </main>
+
+    <script type="module" src="./js/main.js"></script>
+</body>
+</html>
