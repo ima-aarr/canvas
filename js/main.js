@@ -8,8 +8,7 @@ import { StyleManager } from './modules/styleManager.js';
 import { Exporter } from './modules/exporter.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    Logger.info('Application starting...');
-
+    Logger.info('Pro Builder starting...');
 
     const canvas = document.getElementById('canvas');
     if (!canvas) {
@@ -22,23 +21,27 @@ document.addEventListener('DOMContentLoaded', () => {
     Resizer.init();
 
 
-    document.getElementById('btn-add-text').addEventListener('click', () => {
-        ElementFactory.addText();
+    document.getElementById('btn-add-text').addEventListener('click', () => ElementFactory.addText());
+    
+    document.getElementById('btn-add-shape').addEventListener('click', () => {
+        const shapeType = document.getElementById('select-shape').value;
+        ElementFactory.addShape(shapeType);
     });
-
-    document.getElementById('btn-add-box').addEventListener('click', () => {
-        ElementFactory.addBox();
-    });
-
 
     const imageInput = document.getElementById('input-add-image');
     imageInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
-        if (file) {
-            ElementFactory.addImage(file);
-        }
-
+        if (file) ElementFactory.addImage(file);
         e.target.value = '';
+    });
+
+
+    document.getElementById('select-font-family').addEventListener('change', (e) => {
+        StyleManager.changeFontFamily(e.target.value);
+    });
+
+    document.getElementById('input-font-size').addEventListener('input', (e) => {
+        StyleManager.changeFontSize(e.target.value);
     });
 
 
@@ -47,37 +50,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('btn-apply-gradient').addEventListener('click', () => {
-        const color1 = document.getElementById('input-grad-color1').value;
-        const color2 = document.getElementById('input-grad-color2').value;
+        const c1 = document.getElementById('input-grad-color1').value;
+        const c2 = document.getElementById('input-grad-color2').value;
         const angle = document.getElementById('input-grad-angle').value;
-        StyleManager.applyGradient(color1, color2, angle);
+        StyleManager.applyGradient(c1, c2, angle);
     });
 
 
-    document.getElementById('btn-anim-bounce').addEventListener('click', () => {
-        StyleManager.applyAnimation('anim-bounce');
-    });
-
-    document.getElementById('btn-anim-pulse').addEventListener('click', () => {
-        StyleManager.applyAnimation('anim-pulse');
-    });
-
-    document.getElementById('btn-anim-3d-spin').addEventListener('click', () => {
-        StyleManager.applyAnimation('anim-3d-spin');
-    });
-
-    document.getElementById('btn-anim-3d-flip').addEventListener('click', () => {
-        StyleManager.applyAnimation('anim-3d-flip');
-    });
-
-    document.getElementById('btn-anim-clear').addEventListener('click', () => {
-        StyleManager.clearAnimations();
-    });
+    document.getElementById('btn-layer-up').addEventListener('click', () => StyleManager.layerUp());
+    document.getElementById('btn-layer-down').addEventListener('click', () => StyleManager.layerDown());
 
 
-    document.getElementById('btn-export').addEventListener('click', () => {
-        Exporter.exportHTML();
-    });
+    document.getElementById('btn-anim-bounce').addEventListener('click', () => StyleManager.applyAnimation('anim-bounce'));
+    document.getElementById('btn-anim-pulse').addEventListener('click', () => StyleManager.applyAnimation('anim-pulse'));
+    document.getElementById('btn-anim-3d-spin').addEventListener('click', () => StyleManager.applyAnimation('anim-3d-spin'));
+    document.getElementById('btn-anim-3d-flip').addEventListener('click', () => StyleManager.applyAnimation('anim-3d-flip'));
+    document.getElementById('btn-anim-clear').addEventListener('click', () => StyleManager.clearAnimations());
 
-    Logger.info('Application successfully initialized and ready.');
+ 
+    document.getElementById('btn-export').addEventListener('click', () => Exporter.exportHTML());
+
+    Logger.info('Pro Builder successfully initialized.');
 });
