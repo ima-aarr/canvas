@@ -104,6 +104,5 @@ export const Resizer = {
     }
 };
             Logger.debug('Resize interaction ended.');
-        }
     }
 };
