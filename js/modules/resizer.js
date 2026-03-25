@@ -14,7 +14,7 @@ export const Resizer = {
     initialTop: 0,
 
     init() {
-
+     
         State.subscribe((selectedElement) => {
             if (State.isVertexEditing) {
                 this.clearHandles();
@@ -85,6 +85,7 @@ export const Resizer = {
             newTop = this.initialTop + dy;
         }
 
+     
         if (newWidth > 20) {
             el.style.width = `${newWidth}px`;
             el.style.left = `${newLeft}px`;
@@ -101,8 +102,5 @@ export const Resizer = {
             this.activeHandle = null;
             Logger.debug('Resize ended.');
         }
-    }
-};
-            Logger.debug('Resize interaction ended.');
     }
 };
