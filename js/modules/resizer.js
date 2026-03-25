@@ -5,7 +5,7 @@ import { Logger } from '../utils/logger.js';
 export const Resizer = {
     handles: [],
     isResizing: false,
-    currentHandle: null,
+    activeHandle: null,
     startX: 0,
     startY: 0,
     initialWidth: 0,
@@ -14,49 +14,50 @@ export const Resizer = {
     initialTop: 0,
 
     init() {
- 
-        State.subscribe(this.updateHandles.bind(this));
-        
+
+        State.subscribe((selectedElement) => {
+            if (State.isVertexEditing) {
+                this.clearHandles();
+            } else if (selectedElement) {
+                this.renderHandles(selectedElement);
+            } else {
+                this.clearHandles();
+            }
+        });
+
         document.addEventListener('mousemove', this.onMouseMove.bind(this));
         document.addEventListener('mouseup', this.onMouseUp.bind(this));
         Logger.info('Resizer module initialized.');
     },
 
+    renderHandles(element) {
+        this.clearHandles();
 
-    updateHandles(selectedElement) {
- 
-        this.handles.forEach(handle => handle.remove());
-        this.handles = [];
-
-
-        if (!selectedElement) return;
-
-  
         const positions = ['tl', 'tr', 'bl', 'br'];
         positions.forEach(pos => {
             const handle = document.createElement('div');
             handle.className = `resize-handle ${pos}`;
-            
-
-            handle.addEventListener('mousedown', (e) => this.onMouseDown(e, pos, selectedElement));
-            
-
-            selectedElement.appendChild(handle);
+            handle.addEventListener('mousedown', (e) => this.onMouseDown(e, pos, element));
+            element.appendChild(handle);
             this.handles.push(handle);
         });
     },
 
+    clearHandles() {
+        this.handles.forEach(h => h.remove());
+        this.handles = [];
+    },
+
     onMouseDown(e, pos, element) {
         this.isResizing = true;
-        this.currentHandle = pos;
+        this.activeHandle = pos;
         this.startX = e.clientX;
         this.startY = e.clientY;
-
-        const style = window.getComputedStyle(element);
-        this.initialWidth = parseFloat(style.width) || element.offsetWidth;
-        this.initialHeight = parseFloat(style.height) || element.offsetHeight;
-        this.initialLeft = parseFloat(style.left) || 0;
-        this.initialTop = parseFloat(style.top) || 0;
+        
+        this.initialWidth = element.offsetWidth;
+        this.initialHeight = element.offsetHeight;
+        this.initialLeft = parseInt(element.style.left) || 0;
+        this.initialTop = parseInt(element.style.top) || 0;
 
         e.stopPropagation();
     },
@@ -68,37 +69,40 @@ export const Resizer = {
         const dy = e.clientY - this.startY;
         const el = State.selectedElement;
 
- 
-        const MIN_SIZE = 20;
+        let newWidth = this.initialWidth;
+        let newHeight = this.initialHeight;
+        let newLeft = this.initialLeft;
+        let newTop = this.initialTop;
 
-  
-        if (this.currentHandle.includes('r')) { 
-            el.style.width = `${Math.max(MIN_SIZE, this.initialWidth + dx)}px`;
+        if (this.activeHandle.includes('r')) newWidth = this.initialWidth + dx;
+        if (this.activeHandle.includes('l')) {
+            newWidth = this.initialWidth - dx;
+            newLeft = this.initialLeft + dx;
         }
-        if (this.currentHandle.includes('b')) { 
-            el.style.height = `${Math.max(MIN_SIZE, this.initialHeight + dy)}px`;
+        if (this.activeHandle.includes('b')) newHeight = this.initialHeight + dy;
+        if (this.activeHandle.includes('t')) {
+            newHeight = this.initialHeight - dy;
+            newTop = this.initialTop + dy;
         }
-        if (this.currentHandle.includes('l')) { 
-            const newWidth = Math.max(MIN_SIZE, this.initialWidth - dx);
-            if (newWidth > MIN_SIZE) {
-                el.style.width = `${newWidth}px`;
-                el.style.left = `${this.initialLeft + dx}px`;
-            }
+
+        if (newWidth > 20) {
+            el.style.width = `${newWidth}px`;
+            el.style.left = `${newLeft}px`;
         }
-        if (this.currentHandle.includes('t')) { 
-            const Math_max = Math.max; 
-            const newHeight = Math_max(MIN_SIZE, this.initialHeight - dy);
-            if (newHeight > MIN_SIZE) {
-                el.style.height = `${newHeight}px`;
-                el.style.top = `${this.initialTop + dy}px`;
-            }
+        if (newHeight > 20) {
+            el.style.height = `${newHeight}px`;
+            el.style.top = `${newTop}px`;
         }
     },
 
     onMouseUp() {
         if (this.isResizing) {
             this.isResizing = false;
-            this.currentHandle = null;
+            this.activeHandle = null;
+            Logger.debug('Resize ended.');
+        }
+    }
+};
             Logger.debug('Resize interaction ended.');
         }
     }
