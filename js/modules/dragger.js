@@ -10,34 +10,26 @@ export const Dragger = {
     initialTop: 0,
 
     init() {
-  
         document.addEventListener('mousemove', this.onMouseMove.bind(this));
         document.addEventListener('mouseup', this.onMouseUp.bind(this));
-        
-     
-        State.canvas.addEventListener('mousedown', (e) => {
-            if (e.target === State.canvas) {
-                State.clearSelection();
-            }
-        });
         Logger.info('Dragger module initialized.');
     },
 
-
     onMouseDown(e, element) {
-    
-        if (e.target.classList.contains('resize-handle')) return;
+
+        if (State.isVertexEditing && State.selectedElement === element) {
+            return;
+        }
 
         State.select(element);
+        
         this.isDragging = true;
         this.startX = e.clientX;
         this.startY = e.clientY;
-
-        const style = window.getComputedStyle(element);
-        this.initialLeft = parseFloat(style.left) || 0;
-        this.initialTop = parseFloat(style.top) || 0;
-
- 
+        
+        this.initialLeft = parseInt(element.style.left) || 0;
+        this.initialTop = parseInt(element.style.top) || 0;
+        
         e.stopPropagation(); 
     },
 
@@ -47,7 +39,6 @@ export const Dragger = {
         const dx = e.clientX - this.startX;
         const dy = e.clientY - this.startY;
 
-       
         State.selectedElement.style.left = `${this.initialLeft + dx}px`;
         State.selectedElement.style.top = `${this.initialTop + dy}px`;
     },
@@ -55,7 +46,7 @@ export const Dragger = {
     onMouseUp() {
         if (this.isDragging) {
             this.isDragging = false;
-            Logger.debug('Drag interaction ended.');
+            Logger.debug('Drag ended.');
         }
     }
 };
