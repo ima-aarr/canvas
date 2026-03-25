@@ -5,6 +5,7 @@ import { Dragger } from './modules/dragger.js';
 import { Resizer } from './modules/resizer.js';
 import { ElementFactory } from './modules/elementFactory.js';
 import { StyleManager } from './modules/styleManager.js';
+import { VertexEditor } from './modules/vertexEditor.js'; 
 import { Exporter } from './modules/exporter.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -16,16 +17,37 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
+
     State.init(canvas);
     Dragger.init();
     Resizer.init();
+    VertexEditor.init(); 
 
 
-    document.getElementById('btn-add-text').addEventListener('click', () => ElementFactory.addText());
+    canvas.addEventListener('mousedown', (e) => {
+        if (e.target === canvas) {
+            State.clearSelection();
+        }
+    });
+
+
+    canvas.addEventListener('dblclick', (e) => {
+        const el = e.target.closest('.builder-element');
+        if (el && el.classList.contains('builder-polygon')) {
+            State.enterVertexEditMode();
+        }
+    });
+
+
     
+    
+    document.getElementById('btn-add-text').addEventListener('click', () => ElementFactory.addText());
     document.getElementById('btn-add-shape').addEventListener('click', () => {
-        const shapeType = document.getElementById('select-shape').value;
-        ElementFactory.addShape(shapeType);
+        ElementFactory.addShape(document.getElementById('select-shape').value);
+    });
+
+    document.getElementById('btn-add-polygon').addEventListener('click', () => {
+        ElementFactory.addPolygon();
     });
 
     const imageInput = document.getElementById('input-add-image');
@@ -36,24 +58,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    document.getElementById('select-font-family').addEventListener('change', (e) => {
-        StyleManager.changeFontFamily(e.target.value);
-    });
-
-    document.getElementById('input-font-size').addEventListener('input', (e) => {
-        StyleManager.changeFontSize(e.target.value);
-    });
+    document.getElementById('select-font-family').addEventListener('change', (e) => StyleManager.changeFontFamily(e.target.value));
+    document.getElementById('input-font-size').addEventListener('input', (e) => StyleManager.changeFontSize(e.target.value));
 
 
-    document.getElementById('input-color').addEventListener('input', (e) => {
-        StyleManager.applyColor(e.target.value);
-    });
-
+    document.getElementById('input-color').addEventListener('input', (e) => StyleManager.applyColor(e.target.value));
     document.getElementById('btn-apply-gradient').addEventListener('click', () => {
-        const c1 = document.getElementById('input-grad-color1').value;
-        const c2 = document.getElementById('input-grad-color2').value;
-        const angle = document.getElementById('input-grad-angle').value;
-        StyleManager.applyGradient(c1, c2, angle);
+        StyleManager.applyGradient(
+            document.getElementById('input-grad-color1').value,
+            document.getElementById('input-grad-color2').value,
+            document.getElementById('input-grad-angle').value
+        );
     });
 
 
@@ -67,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-anim-3d-flip').addEventListener('click', () => StyleManager.applyAnimation('anim-3d-flip'));
     document.getElementById('btn-anim-clear').addEventListener('click', () => StyleManager.clearAnimations());
 
- 
+
     document.getElementById('btn-export').addEventListener('click', () => Exporter.exportHTML());
 
     Logger.info('Pro Builder successfully initialized.');
