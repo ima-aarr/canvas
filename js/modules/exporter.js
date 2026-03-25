@@ -6,6 +6,7 @@ export const Exporter = {
     exportHTML() {
         if (!State.canvas) return;
 
+
         State.clearSelection();
         const canvasClone = State.canvas.cloneNode(true);
 
@@ -14,10 +15,13 @@ export const Exporter = {
             if (el.contentEditable === 'true') {
                 el.removeAttribute('contenteditable');
             }
-            const handles = el.querySelectorAll('.resize-handle');
+ 
+            el.classList.remove('selected', 'vertex-editing');
+            
+  
+            const handles = el.querySelectorAll('.resize-handle, .vertex-handle');
             handles.forEach(handle => handle.remove());
         });
-
 
         const googleFonts = `
     <link rel="preconnect" href="https://fonts.googleapis.com">
