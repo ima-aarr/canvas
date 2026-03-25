@@ -16,7 +16,7 @@
         
         <div class="panel-section">
             <h3>要素追加</h3>
-            <button id="btn-add-text" class="ui-btn">📝 テキスト</button>
+            <button id="btn-add-text" class="ui-btn">📝 テキストを追加</button>
             <div class="shape-controls">
                 <select id="select-shape" class="ui-select">
                     <option value="rect">四角形</option>
@@ -24,8 +24,10 @@
                     <option value="triangle">三角形</option>
                     <option value="star">星型</option>
                 </select>
-                <button id="btn-add-shape" class="ui-btn">＋ 図形</button>
+                <button id="btn-add-shape" class="ui-btn">＋ 固定図形</button>
             </div>
+            <button id="btn-add-polygon" class="ui-btn action-script">⬣ 多角形 (頂点編集)</button>
+            
             <label class="ui-btn file-upload-btn">
                 🖼 画像を挿入
                 <input type="file" id="input-add-image" accept="image/png, image/jpeg, image/gif, image/webp">
@@ -64,7 +66,7 @@
         </div>
 
         <div class="panel-section">
-            <h3>配置・レイヤー (移動)</h3>
+            <h3>配置・レイヤー</h3>
             <div class="layer-controls">
                 <button id="btn-layer-up" class="ui-btn ui-btn-small">↑ 手前へ</button>
                 <button id="btn-layer-down" class="ui-btn ui-btn-small">↓ 奥へ</button>
@@ -80,7 +82,7 @@
             <button id="btn-anim-clear" class="ui-btn ui-btn-small danger">解除</button>
         </div>
 
-        <button id="btn-export" class="ui-btn export-btn">📥 エクスポート</button>
+        <button id="btn-export" class="ui-btn export-btn">📥 HTMLをエクスポート</button>
     </aside>
 
     <main id="workspace">
